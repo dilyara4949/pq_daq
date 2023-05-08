@@ -32,11 +32,20 @@ func main() {
 		userRoutes.GET("/", getUsers)
 	}
 
+	productRoutes := r.Group("api/product")
+	{
+		productRoutes.GET("/", getProducts)
+	}
+	
 	r.Run(":8000")
 }
 
 func getUsers(c *gin.Context){
 	s := "lnrlbf"
-
 	c.IndentedJSON(http.StatusOK, &s)
+}
+
+func getProducts(c *gin.Context){
+	p := "product 1"
+	c.IndentedJSON(http.StatusOK, &p)
 }
