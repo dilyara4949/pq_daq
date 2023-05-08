@@ -14,29 +14,19 @@ func NewUserRepo() *UserRepo {
 	return &UserRepo{Db: &db.DB}
 }
 
-func (s *UserRepo)GetById(ID int) (models.User, error) {
+func (s *UserRepo)GetById(ID uint) (*models.User, error) {
 
 	user := models.User{}
 
 	if result := s.Db.Db.Select("id", "firstname", "lastname", "email").Where("id = ?", ID).First(&user); result.Error != nil {
-		return user, result.Error
+		return &user, result.Error
 	}
 
-	return user, nil
+	return &user, nil
 
 }
 
-func (s *UserRepo)GetByEmail(email string) (models.User, error) {
 
-	user := models.User{}
-
-	if result := s.Db.Db.Select("id", "firstname", "lastname", "email",  "password").Where("email = ?", email).Find(&user); result.Error != nil {
-		return user, result.Error
-	}
-
-	return user, nil
-
-}
 
 func (s *UserRepo)GetAllUsers() ([]models.User, error) {
 	var users []models.User
