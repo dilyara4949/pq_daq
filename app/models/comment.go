@@ -1,13 +1,18 @@
 package models
 
 import (
-	"github.com/jinzhu/gorm"
+	// "gorm.io/gorm"
+	"time"
 )
 
 type Comment struct {
-	gorm.Model
-	ID      uint    
-	User    string
-	Product []string 
-	comment string
+	ID        uint `gorm:"primaryKey"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt *time.Time `gorm:"index"`
+	UserID    uint
+	User      User
+	ProductID uint
+	Product   Product
+	Comment   string
 }

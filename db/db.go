@@ -1,6 +1,6 @@
 package db
 
-import (
+import ( 
 	"fmt"
 	"log"
 	"os"
@@ -8,7 +8,6 @@ import (
 	"github.com/dilyara4949/pq_daq/app/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
 )
 
 type Database struct {
@@ -30,9 +29,7 @@ func ConnectDb() {
 
 	// dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=%s ", "localhost", "postgres", "12345", "pqdaq", "5432", "disable")
 
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
-		Logger: logger.Default.LogMode(logger.Info),
-	})
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
 	if err != nil {
 		log.Fatalf("Failed to connect to database %v\n, dsn: %s", err, dsn)
@@ -42,7 +39,10 @@ func ConnectDb() {
 	// , &models.Order{}, &models.Category{}, &models.Product{}, &models.Comment{}, &models.Rating{}
 
 
-
+	if err != nil {
+		
+		panic(err)
+	}
 
 	DB = Database {
 		Db: db,

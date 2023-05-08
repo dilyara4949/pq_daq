@@ -1,14 +1,18 @@
 package models
 
 import (
-	"github.com/jinzhu/gorm"
+	"time"
+
 )
 
 type Order struct {
-	gorm.Model
-	ID            uint    
-	User          User 
-	Product       []Product 
-	PaymentStatus string  
-	TotalPrice    uint     
+	ID           uint `gorm:"primaryKey"`
+	CreatedAt    time.Time
+	UpdatedAt    time.Time
+	DeletedAt    *time.Time `gorm:"index"`
+	UserID       uint
+	User         User
+	Products     []*Product `gorm:"many2many:order_products;"`
+	PaymentStatus string
+	TotalPrice   float64
 }
