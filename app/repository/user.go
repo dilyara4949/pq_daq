@@ -27,7 +27,6 @@ func (s *UserRepo)GetById(ID uint) (*models.User, error) {
 }
 
 
-
 func (s *UserRepo)GetAllUsers() ([]models.User, error) {
 	var users []models.User
 

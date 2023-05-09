@@ -7,7 +7,6 @@ import (
 )
 
 
-
 func Migrate() {
 	Product := models.Product{}
 	Category := models.Category{}
