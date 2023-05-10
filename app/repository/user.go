@@ -6,11 +6,21 @@ import (
 	// "gorm.io/gorm"
 )
 
+type UserRepository interface {
+	GetById(ID uint) (*models.User, error)
+	GetAll() ([]*models.User, error) 
+	CreateUser(user *models.User) (*models.User, error) 
+	UpdateUser(user *models.User) (*models.User, error)
+	DeleteUser(user *models.User) (*models.User, error) 
+}
+
 type UserRepo struct {
 	Db *db.Database
 }
 
-func NewUserRepo() *UserRepo {
+
+
+func NewUserRepo() UserRepository {
 	return &UserRepo{Db: &db.DB}
 }
 
@@ -27,10 +37,11 @@ func (s *UserRepo)GetById(ID uint) (*models.User, error) {
 }
 
 
-func (s *UserRepo)GetAllUsers() ([]models.User, error) {
-	var users []models.User
 
-	if result := s.Db.Db.Select("id", "firstname", "lastname", "email").Find(&users); result.Error != nil {
+func (s *UserRepo)GetAll() ([]*models.User, error) {
+	var users []*models.User
+
+	if result := s.Db.Db.Find(&users); result.Error != nil {
 		return nil, result.Error
 	}
 
