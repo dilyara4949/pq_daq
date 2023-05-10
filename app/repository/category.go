@@ -9,6 +9,7 @@ type CategoryRepository interface {
 	GetById(ID uint) (*models.Category, error)
 	GetAll() ([]*models.Category, error) 
 	DeleteCategory(category *models.Category) (*models.Category, error) 
+	CreateCategory(category *models.Category) (*models.Category, error)
 }
 
 type CategoryRepo struct {
@@ -32,7 +33,7 @@ func (c *CategoryRepo) GetById(ID uint) (*models.Category, error) {
 func (c *CategoryRepo) GetAll() ([]*models.Category, error) {
 	var categories []*models.Category
 
-	if result := c.Db.Db.Select("id", "name").Find(categories); result.Error != nil {
+	if result := c.Db.Db.Select("id", "name").Find(&categories); result.Error != nil {
 		return nil, result.Error
 	}
 
@@ -42,6 +43,16 @@ func (c *CategoryRepo) GetAll() ([]*models.Category, error) {
 func (c *CategoryRepo) DeleteCategory(category *models.Category) (*models.Category, error) {
 	if err := c.Db.Db.Delete(&category).Error; err != nil {
 		return category, err
+	}
+
+	return category, nil
+}
+
+
+func (p *CategoryRepo)CreateCategory(category *models.Category) (*models.Category, error) {
+	
+	if err := p.Db.Db.Create(&category).Error; err != nil {
+		return nil, err
 	}
 
 	return category, nil

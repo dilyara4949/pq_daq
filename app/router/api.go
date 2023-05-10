@@ -15,6 +15,7 @@ func RunAPI(r *gin.Engine, container *dig.Container) error {
 		user *c.UserController,
 		auth *c.AuthController,
 		product *c.ProductController,
+		category *c.CategoryController,
 		jwtS s.JWTService,
 	) error {
 
@@ -30,13 +31,20 @@ func RunAPI(r *gin.Engine, container *dig.Container) error {
 			apiUser.Use(middleware.AuthorizeJWT(jwtS))
 			apiUser.GET("/users", user.GetAll)
 		}
-		// apiCategory := r.Group("api")
-		// {
+		apiCategory := r.Group("api")
+		{
 		// apiCategory.Use(middleware.AuthorizeJWT(jwtS))
-		// apiCategory.GET("/category", category.GetAll)
-		// apiCategory.GET("/category/:id", category.GetById)
-		// apiCategory.POST("/category", category.Create)
-		// }
+		apiCategory.GET("/category", category.GetAll)
+		apiCategory.GET("/category/:id", category.GetById)
+		apiCategory.POST("/category", category.Create)
+		}
+		apiProduct := r.Group("api")
+		{
+		// apiCategory.Use(middleware.AuthorizeJWT(jwtS))
+		apiProduct.GET("/product", product.GetAll)
+		apiProduct.GET("/product/:id", product.GetById)
+		apiProduct.POST("/product", product.CreateProduct)
+		}
 		// apiComment := r.Group("api")
 		// {
 		// 	apiComment.Use(middleware.AuthorizeJWT(jwtS))

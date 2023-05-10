@@ -8,8 +8,8 @@ import (
 	"github.com/dilyara4949/pq_daq/app/models"
 	"github.com/dilyara4949/pq_daq/app/services"
 	"github.com/gin-gonic/gin"
-	"github.com/go-playground/validator/v10"
-	"github.com/jinzhu/copier"
+	// "github.com/go-playground/validator/v10"
+	// "github.com/jinzhu/copier"
 )
 
 
@@ -47,31 +47,59 @@ func (p *ProductController) GetById(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, products)
 }
 
+// func (p *ProductController) CreateProduct(c *gin.Context) {
+// 	var item models.Product
+// 	if err := c.Bind(&item); err != nil {
+// 		log.Fatal("Failed to parse request body: ", err)
+// 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+// 		return
+// 	}
+
+// 	// validate := validator.New()
+// 	// err := validate.Struct(item)
+// 	// if err != nil {
+// 	// 	log.Fatal("Request body is invalid: ", err.Error())
+// 	// 	c.JSON(http.StatusBadRequest, err.Error())
+// 	// 	return
+// 	// }
+
+// 	ctx := c.Request.Context()
+// 	products, err := p.product.CreateProduct(ctx, &item)
+// 	if err != nil {
+// 		log.Fatal("Failed to create product", err.Error())
+// 		c.JSON(http.StatusBadRequest, err.Error())
+// 		return
+// 	}
+
+// 	// var res models.Product
+// 	// copier.Copy(&res, &products)
+// 	c.JSON(http.StatusOK, products)
+// }
+
 func (p *ProductController) CreateProduct(c *gin.Context) {
-	var item models.ProductBodyParam
+	var item models.Product
 	if err := c.Bind(&item); err != nil {
-		log.Fatal("Failed to parse request body: ", err)
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+	    log.Fatal("Failed to parse request body: ", err)
+	    c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	    return
 	}
-
-	validate := validator.New()
-	err := validate.Struct(item)
-	if err != nil {
-		log.Fatal("Request body is invalid: ", err.Error())
-		c.JSON(http.StatusBadRequest, err.Error())
-		return
-	}
-
+    
+	item.Category = models.Category{}
+	
+	categoryIDs := item.CategoryID 
+    
+	category := models.Category{ID: categoryIDs}
+	item.Category =category
+	
+    
 	ctx := c.Request.Context()
-	products, err := p.product.CreateProduct(ctx, &item)
+	product, err := p.product.CreateProduct(ctx, &item)
 	if err != nil {
-		log.Fatal("Failed to create product", err.Error())
-		c.JSON(http.StatusBadRequest, err.Error())
-		return
+	    log.Fatal("Failed to create product: ", err.Error())
+	    c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	    return
 	}
-
-	var res []models.Product
-	copier.Copy(&res, &products)
-	c.JSON(http.StatusOK, res)
-}
+    
+	c.JSON(http.StatusOK, product)
+    }
+    

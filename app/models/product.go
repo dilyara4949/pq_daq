@@ -11,9 +11,10 @@ type Product struct {
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 	DeletedAt   *time.Time `gorm:"index"`
-	UserID      uint
-	User        User
-	Categories  Category `gorm:"many2many:product_categories;"`
+	// UserID      uint
+	// User        User
+	CategoryID  uint
+	Category  Category
 	Name        string
 	Price       float64
 	Stock       int

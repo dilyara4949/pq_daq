@@ -9,8 +9,9 @@ import (
 
 type CategoryService interface {
 	GetCategoryByID(ctx context.Context, id uint) (*models.Category, error)
-	GetAll(ctx context.Context, category []*models.Category) ([]*models.Category, error)
+	GetAll(ctx context.Context) ([]*models.Category, error)
 	DeleteCategory(ctx context.Context, category *models.Category) (*models.Category, error) 
+	CreateCategory(ctx context.Context, product *models.Category) (*models.Category, error)
 }
 
 
@@ -41,11 +42,21 @@ func (c *categoryService) DeleteCategory(ctx context.Context, category *models.C
 	return category, nil
 }
 
-func (c *categoryService) GetAll(ctx context.Context, category []*models.Category) ([]*models.Category, error) {
+func (c *categoryService) GetAll(ctx context.Context) ([]*models.Category, error) {
 	categories, err := c.category.GetAll()
 	if err != nil {
 		return nil, err
 	}
 
 	return categories, nil
+}
+
+
+func(c *categoryService) CreateCategory(ctx context.Context, category *models.Category) (*models.Category, error) {
+	category, err := c.category.CreateCategory(category)
+	if err != nil {
+		return nil, err
+	}
+
+	return category, nil
 }
