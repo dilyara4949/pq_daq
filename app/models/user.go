@@ -2,20 +2,18 @@ package models
 
 import (
 	"time"
-
 	// "gorm.io/gorm"
 	// "github.com/jinzhu/gorm"
 )
-
 type User struct {
-	ID        uint `gorm:"primaryKey"`
+	ID        uint       `gorm:"primaryKey" json:"id"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt *time.Time `gorm:"index"`
-
-	Username  string `gorm:"unique"`
-	FirstName string
-	LastName  string
-	Email     string `gorm:"unique"`
-	Password  string
+	Token     string     `gorm:"-" json:"token,omitempty"`
+	Username  string     `gorm:"unique" json:"username"`
+	FirstName string     `json:"firstName"`
+	LastName  string     `json:"lastName"`
+	Email     string     `gorm:"unique" json:"email"`
+	Password  string     `json:"password"`
 }

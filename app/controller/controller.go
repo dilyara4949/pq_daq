@@ -6,6 +6,7 @@ import (
 
 
 func Inject(container *dig.Container) error {
-	_ = container.Provide(NewUserAPI)
+	_ = container.Provide(NewUserController)
+	_ = container.Provide(NewAuthController)
 	return nil
 }

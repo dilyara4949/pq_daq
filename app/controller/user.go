@@ -13,7 +13,7 @@ type UserController struct {
 	user service.UserService
 }
 
-func NewUserAPI(service service.UserService) *UserController {
+func NewUserController(service service.UserService) *UserController {
 	return &UserController{user: service}
 }
 
@@ -24,5 +24,5 @@ func (u *UserController) GetAll(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err)
 	}
-	c.JSON(http.StatusOK, users)
+	c.IndentedJSON(http.StatusOK, users)
 }
