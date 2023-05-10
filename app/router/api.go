@@ -10,9 +10,6 @@ import (
 	"go.uber.org/dig"
 )
 
-// var jwtService     s.JWTService   = s.NewJWTService()
-
-
 
 func RunAPI(r *gin.Engine, container *dig.Container) error {
 	err := container.Invoke(func(
