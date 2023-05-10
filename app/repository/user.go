@@ -3,6 +3,7 @@ package repository
 import (
 	"github.com/dilyara4949/pq_daq/app/models"
 	"github.com/dilyara4949/pq_daq/db"
+	"gorm.io/gorm"
 	// "gorm.io/gorm"
 )
 
@@ -12,6 +13,8 @@ type UserRepository interface {
 	CreateUser(user *models.User) (*models.User, error) 
 	UpdateUser(user *models.User) (*models.User, error)
 	DeleteUser(user *models.User) (*models.User, error) 
+	VerifyCredential(email string, password string) interface{}
+	IsDuplicateEmail(email string) (tx *gorm.DB)
 }
 
 type UserRepo struct {
@@ -70,4 +73,18 @@ func (s *UserRepo)DeleteUser(user *models.User) (*models.User, error) {
 	}
 
 	return user, nil
+}
+
+func (s *UserRepo) VerifyCredential(email string, password string) interface{} {
+	var user models.User
+	res := s.Db.Db.Where("email = ?", email).Take(&user)
+	if res.Error == nil {
+		return user
+	}
+	return nil
+}
+
+func (s *UserRepo) IsDuplicateEmail(email string) (tx *gorm.DB) {
+	var user models.User
+	return s.Db.Db.Where("email = ?", email).Take(&user)
 }
