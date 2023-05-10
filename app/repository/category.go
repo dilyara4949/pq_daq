@@ -5,11 +5,17 @@ import (
 	"github.com/dilyara4949/pq_daq/db"
 )
 
+type CategoryRepository interface {
+	GetById(ID uint) (*models.Category, error)
+	GetAll() ([]*models.Category, error) 
+	DeleteCategory(category *models.Category) (*models.Category, error) 
+}
+
 type CategoryRepo struct {
 	Db *db.Database
 }
 
-func NewCategoryRepo() *CategoryRepo {
+func NewCategoryRepo() CategoryRepository {
 	return &CategoryRepo{Db: &db.DB}
 }
 
@@ -23,10 +29,10 @@ func (c *CategoryRepo) GetById(ID uint) (*models.Category, error) {
 	return &category, nil
 }
 
-func (c *CategoryRepo) GetAllCategories() ([]models.Category, error) {
-	var categories []models.Category
+func (c *CategoryRepo) GetAll() ([]*models.Category, error) {
+	var categories []*models.Category
 
-	if result := c.Db.Db.Select("id", "name").Find(&categories); result.Error != nil {
+	if result := c.Db.Db.Select("id", "name").Find(categories); result.Error != nil {
 		return nil, result.Error
 	}
 

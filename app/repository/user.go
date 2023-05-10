@@ -61,7 +61,7 @@ func (s *UserRepo)UpdateUser(user *models.User) (*models.User, error) {
 		return user, err
 	}
 
-	return user, nil
+	return user, nil	
 }
 
 func (s *UserRepo)DeleteUser(user *models.User) (*models.User, error) {

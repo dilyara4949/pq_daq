@@ -5,11 +5,18 @@ import (
 	"github.com/dilyara4949/pq_daq/db"
 )
 
+type OrderRepository interface {
+	GetById(ID uint) (*models.Order, error)
+	CreateOrder(order *models.Order) (*models.Order, error)
+	DeleteOrder(order *models.Order) (*models.Order, error) 
+	GetAll() ([]*models.Order, error)
+}
+
 type OrderRepo struct {
 	Db *db.Database
 }
 
-func NewOrderRepo() *UserRepo {
+func NewOrderRepo() UserRepository {
 	return &UserRepo{Db: &db.DB}
 }
 
@@ -42,8 +49,8 @@ func (s *OrderRepo)DeleteOrder(order *models.Order) (*models.Order, error) {
 	return order, nil
 }
 
-func (s *OrderRepo)GetAllOrders() ([]models.Order, error) {
-	var orders []models.Order 
+func (s *OrderRepo)GetAll() ([]*models.Order, error) {
+	var orders []*models.Order 
 
 	if result := s.Db.Db.Select("id" , "PaymentStatus", "TotalPrice").Find(&orders); result.Error != nil {
 		return nil, result.Error
