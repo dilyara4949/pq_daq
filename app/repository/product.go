@@ -3,12 +3,13 @@ package repository
 import (
 	"github.com/dilyara4949/pq_daq/app/models"
 	"github.com/dilyara4949/pq_daq/db"
+	"github.com/jinzhu/copier"
 )
 
 type ProductRepository interface {
 	GetById(ID uint) (*models.Product, error)
 	GetAll() ([]*models.Product, error)
-	CreateProduct(product *models.Product) (*models.Product, error)
+	CreateProduct(product *models.ProductBodyParam) (*models.Product, error)
 	DeleteProduct(product *models.Product) (*models.Product, error)
 }
 
@@ -40,12 +41,14 @@ func (p *ProductRepo)GetAll() ([]*models.Product, error) {
 	return products, nil
 }
 
-func (p *ProductRepo)CreateProduct(product *models.Product) (*models.Product, error) {
-	if err := p.Db.Db.Create(&product).Error; err != nil {
-		return product, err
+func (p *ProductRepo)CreateProduct(product *models.ProductBodyParam) (*models.Product, error) {
+	var product2 models.Product
+	copier.Copy(&product2, &product)
+	if err := p.Db.Db.Create(&product2).Error; err != nil {
+		return nil, err
 	}
 
-	return product, nil
+	return &product2, nil
 }
 
 func (p *ProductRepo) DeleteProduct(product *models.Product) (*models.Product, error) {

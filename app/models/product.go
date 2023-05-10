@@ -13,9 +13,16 @@ type Product struct {
 	DeletedAt   *time.Time `gorm:"index"`
 	UserID      uint
 	User        User
-	Categories  []*Category `gorm:"many2many:product_categories;"`
+	Categories  Category `gorm:"many2many:product_categories;"`
 	Name        string
 	Price       float64
 	Stock       int
 	Description string
+}
+
+type ProductBodyParam struct {
+	Name        string `json:"name,omitempty" validate:"required"`
+	Description string `json:"description,omitempty"`
+	CategoryID   string `json:"category_id,omitempty" validate:"required"`
+	Price       uint   `json:"price,omitempty"`
 }
