@@ -12,6 +12,7 @@ type ProductService interface {
 	GetAll(ctx context.Context)([]*models.Product, error)
 	DeleteProduct(ctx context.Context, product *models.Product)(*models.Product, error)
 	CreateProduct(ctx context.Context, product *models.Product) (*models.Product, error)
+	GetCategorytByID(ctx context.Context, id uint) (*models.Category, error)
 }
 
 type productService struct {
@@ -30,6 +31,14 @@ func(p *productService) GetProductByID(ctx context.Context, id uint) (*models.Pr
 	return product, nil
 }
 
+func(p *productService) GetCategorytByID(ctx context.Context, id uint) (*models.Category, error) {
+	category, err := p.product.GetCategortById( id)
+	if err != nil {
+		return nil, err
+	}
+
+	return category, nil
+}
 func(p *productService) GetAll(ctx context.Context)([]*models.Product, error) {
 	products, err := p.product.GetAll()
 	if err != nil {
@@ -55,3 +64,4 @@ func(p *productService) CreateProduct(ctx context.Context, item *models.Product)
 
 	return product, nil
 }
+

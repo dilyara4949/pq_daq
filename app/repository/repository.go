@@ -10,5 +10,6 @@ func Inject(container *dig.Container) error {
 	_ = container.Provide(NewOrderRepo)
 	_ = container.Provide(NewCommentRepo)
 	_ = container.Provide(NewCategoryRepo)
+	_ = container.Provide(NewRatingRepo)
 	return nil
 }

@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -34,17 +35,22 @@ func (p *ProductController) GetAll(c *gin.Context) {
 func (p *ProductController) GetById(c *gin.Context) {
 	productId := c.Param("id")
 	id, err:= strconv.Atoi(productId)
-
+	
 	if err != nil {
-		log.Fatal("Id is incorrect")
+		panic("Id is incorrect")
 	}
-
-	products, err := p.product.GetProductByID(c, uint(id))
+	fmt.Println(productId)
+	product, err := p.product.GetProductByID(c, uint(id))
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err)
 	}
-	c.IndentedJSON(http.StatusOK, products)
+	c.IndentedJSON(http.StatusOK, product)
+}
+
+
+func (p *ProductController) getCategortById(c *gin.Context, id uint)( *models.Category, error){
+	return p.product.GetCategorytByID(c, id)
 }
 
 // func (p *ProductController) CreateProduct(c *gin.Context) {
@@ -78,20 +84,22 @@ func (p *ProductController) GetById(c *gin.Context) {
 
 func (p *ProductController) CreateProduct(c *gin.Context) {
 	var item models.Product
-	if err := c.Bind(&item); err != nil {
+	err := c.Bind(&item)
+	if err != nil {
 	    log.Fatal("Failed to parse request body: ", err)
 	    c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	    return
 	}
-    
-	item.Category = models.Category{}
+	// err := ""
+	// item.Category = models.Category{}
 	
-	categoryIDs := item.CategoryID 
+	// categoryIDs := item.CategoryID 
     
-	category := models.Category{ID: categoryIDs}
-	item.Category =category
-	
-    
+	// category := models.Category{ID: categoryIDs}
+	// item.Category =category
+	// err := c.Error
+	category, err := p.getCategortById(c, uint(item.CategoryID))
+	item.Category = *category
 	ctx := c.Request.Context()
 	product, err := p.product.CreateProduct(ctx, &item)
 	if err != nil {
