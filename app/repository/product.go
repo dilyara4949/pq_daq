@@ -1,6 +1,8 @@
 package repository
 
 import (
+	// "sort"
+
 	"github.com/dilyara4949/pq_daq/app/models"
 	"github.com/dilyara4949/pq_daq/db"
 )
@@ -11,6 +13,9 @@ type ProductRepository interface {
 	CreateProduct(product *models.Product) (*models.Product, error)
 	DeleteProduct(product *models.Product) (*models.Product, error)
 	GetCategortById(ID uint) (*models.Category, error) 
+	CreateRating(rating *models.Rating) (*models.Rating, error)
+	SortByRating(sort string) ([]*models.Product, error)
+	SortByPrice(sort string) ([]*models.Product, error)
 }
 
 type ProductRepo struct {
@@ -65,4 +70,32 @@ func (p *ProductRepo) DeleteProduct(product *models.Product) (*models.Product, e
 		return product, err
 	}
 	return product, nil
+}
+
+func (p *ProductRepo)CreateRating(rating *models.Rating) (*models.Rating, error) {
+
+	if err := p.Db.Db.Create(&rating).Error; err != nil {
+		return nil, err
+	}
+
+	return rating, nil
+}
+
+func (p *ProductRepo)SortByPrice(sort string) ([]*models.Product, error) {
+	var products []*models.Product
+
+	if result := p.Db.Db.Order("price " + sort).Find(&products); result.Error != nil {
+		return nil, result.Error
+	}
+
+	return products, nil
+}
+func (p *ProductRepo)SortByRating(sort string) ([]*models.Product, error) {
+	var products []*models.Product
+
+	if result := p.Db.Db.Order("rating " + sort).Find(&products); result.Error != nil {
+		return nil, result.Error
+	}
+
+	return products, nil
 }

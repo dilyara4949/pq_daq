@@ -13,6 +13,9 @@ import (
 	// "github.com/jinzhu/copier"
 )
 
+type sort struct {
+	Sort string `json:"sort"`
+}
 
 
 type ProductController struct {
@@ -82,6 +85,10 @@ func (p *ProductController) getCategortById(c *gin.Context, id uint)( *models.Ca
 // 	c.JSON(http.StatusOK, products)
 // }
 
+// func (p *ProductController) crRAT(*models.Rating) {
+	
+// }
+
 func (p *ProductController) CreateProduct(c *gin.Context) {
 	var item models.Product
 	err := c.Bind(&item)
@@ -90,14 +97,6 @@ func (p *ProductController) CreateProduct(c *gin.Context) {
 	    c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	    return
 	}
-	// err := ""
-	// item.Category = models.Category{}
-	
-	// categoryIDs := item.CategoryID 
-    
-	// category := models.Category{ID: categoryIDs}
-	// item.Category =category
-	// err := c.Error
 	category, err := p.getCategortById(c, uint(item.CategoryID))
 	item.Category = *category
 	ctx := c.Request.Context()
@@ -107,7 +106,49 @@ func (p *ProductController) CreateProduct(c *gin.Context) {
 	    c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	    return
 	}
+
+	rating := models.Rating{}
+	rating.Product = item
+	rating.ProductID = item.ID
+	rating.Amount = 0
+	rating.Sum = 0
+	p.product.CreateRating(ctx, &rating)
     
 	c.JSON(http.StatusOK, product)
     }
     
+func (p *ProductController) SortByPrice(c *gin.Context) {
+	sort := sort{}
+	ctx := c.Request.Context()
+	// err := c.Bind(sort)
+	if err := c.ShouldBindJSON(&sort);err != nil {
+	    log.Fatal("Failed to parse request body: ", err)
+	    c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	    return
+	}
+	fmt.Println(sort)
+	products, err := p.product.SortByPrice(ctx, sort.Sort)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err)
+	}
+	c.IndentedJSON(http.StatusOK, products)
+}
+
+func (p *ProductController) SortByRating(c *gin.Context) {
+	sort := sort{}
+	ctx := c.Request.Context()
+	if err := c.ShouldBindJSON(&sort);err != nil {
+	    log.Fatal("Failed to parse request body: ", err)
+	    c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	    return
+	}
+	
+	fmt.Println(sort)
+	products, err := p.product.SortByRating(ctx, sort.Sort)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err)
+	}
+	c.IndentedJSON(http.StatusOK, products)
+}

@@ -19,6 +19,7 @@ type Product struct {
 	Price       float64
 	Stock       int
 	Description string
+	Rating float64
 }
 
 type ProductBodyParam struct {

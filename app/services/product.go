@@ -13,6 +13,9 @@ type ProductService interface {
 	DeleteProduct(ctx context.Context, product *models.Product)(*models.Product, error)
 	CreateProduct(ctx context.Context, product *models.Product) (*models.Product, error)
 	GetCategorytByID(ctx context.Context, id uint) (*models.Category, error)
+	CreateRating(ctx context.Context, rating *models.Rating) (*models.Rating, error)
+	SortByPrice(ctx context.Context, sort string)([]*models.Product, error) 
+	SortByRating(ctx context.Context, sort string)([]*models.Product, error) 
 }
 
 type productService struct {
@@ -46,7 +49,20 @@ func(p *productService) GetAll(ctx context.Context)([]*models.Product, error) {
 	}
 	return products, nil
 }
-
+func(p *productService) SortByPrice(ctx context.Context, sort string)([]*models.Product, error) {
+	products, err := p.product.SortByPrice(sort)
+	if err != nil {
+		return nil, err
+	}
+	return products, nil
+}
+func(p *productService) SortByRating(ctx context.Context, sort string)([]*models.Product, error) {
+	products, err := p.product.SortByRating(sort)
+	if err != nil {
+		return nil, err
+	}
+	return products, nil
+}
 func(p *productService) DeleteProduct(ctx context.Context, product *models.Product)(*models.Product, error) {
 	product, err := p.product.DeleteProduct(product)
 	if err != nil {
@@ -65,3 +81,11 @@ func(p *productService) CreateProduct(ctx context.Context, item *models.Product)
 	return product, nil
 }
 
+func(p *productService) CreateRating(ctx context.Context, rating *models.Rating) (*models.Rating, error) {
+	rating, err := p.product.CreateRating(rating)
+	if err != nil {
+		return nil, err
+	}
+
+	return rating, nil
+}

@@ -12,6 +12,6 @@ func Inject(container *dig.Container) error {
 	_ = container.Provide(NewCommentService)
 	_ = container.Provide(NewOrderService)
 	_ = container.Provide(NewProductService)
-	_ = container.Provide(NewJWTService)
+	_ = container.Provide(NewRatingService)
 	return nil
 }

@@ -9,6 +9,9 @@ type RatingRepository interface {
 	Create(rating *models.Rating) (*models.Rating, error)
 	Delete(rating *models.Rating) (*models.Rating, error)
 	GetById(ID uint) (*models.Rating, error) 
+	UpdatRating(rating *models.Rating) (*models.Rating, error)
+	UpdatProduct(product *models.Product) (*models.Product, error)
+	GetByIdProduct(ID uint) (*models.Product, error)
 }
 
 type RatingRepo struct {
@@ -47,12 +50,37 @@ func (p *RatingRepo) Delete(rating *models.Rating) (*models.Rating, error) {
 	}
 	return rating, nil
 }
-func (c *RatingRepo) GetById(ID uint) (*models.Rating, error) {
+func (c *RatingRepo) GetById(productId uint) (*models.Rating, error) {
 	rating := models.Rating{}
 
-	if result := c.Db.Db.Select("id", "name").Where("id = ?", ID).First(&rating); result.Error != nil {
+	if result := c.Db.Db.Where("product_ID = ?", productId).First(&rating); result.Error != nil {
 		return nil, result.Error
 	}
 
 	return &rating, nil
+}
+
+func (s *RatingRepo)UpdatRating(rating *models.Rating) (*models.Rating, error) {
+	if err := s.Db.Db.Save(&rating).Error; err != nil {
+		return rating, err
+	}
+
+	return rating, nil	
+}
+
+func (p *RatingRepo) GetByIdProduct(ID uint) (*models.Product, error) {
+	product := models.Product{}
+
+	if result := p.Db.Db.Where("id = ?", ID).First(&product); result.Error != nil {
+		return nil, result.Error
+	}
+
+	return &product, nil
+}
+func (s *RatingRepo)UpdatProduct(product *models.Product) (*models.Product, error) {
+	if err := s.Db.Db.Save(&product).Error; err != nil {
+		return product, err
+	}
+
+	return product, nil	
 }

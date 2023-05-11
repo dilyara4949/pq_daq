@@ -43,6 +43,8 @@ func RunAPI(r *gin.Engine, container *dig.Container) error {
 		{
 		// apiCategory.Use(middleware.AuthorizeJWT(jwtS))
 		apiProduct.GET("/product", product.GetAll)
+		apiProduct.GET("/product/price", product.SortByPrice)
+		apiProduct.GET("/product/rating", product.SortByRating)
 		apiProduct.GET("/product/:id", product.GetById)
 		apiProduct.POST("/product", product.CreateProduct)
 		}
@@ -61,9 +63,9 @@ func RunAPI(r *gin.Engine, container *dig.Container) error {
 		// }
 		apiRating := r.Group("api")
 		{
-			apiRating.Use(middleware.AuthorizeJWT(jwtS))
-			apiRating.GET("/rating/:priduct_id", rating.GetById)
-			apiRating.PUT("/rating/:priduct_id", rating.Create)
+			// apiRating.Use(middleware.AuthorizeJWT(jwtS))
+			apiRating.GET("/rating/:product_id", rating.GetById)
+			apiRating.PUT("/rating/:product_id", rating.Create)
 		}
 
 		return nil
