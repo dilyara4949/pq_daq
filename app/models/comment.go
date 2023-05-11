@@ -11,8 +11,8 @@ type Comment struct {
 	UpdatedAt time.Time
 	DeletedAt *time.Time `gorm:"index"`
 	UserID    uint
-	User      User
+	// User      User
 	ProductID uint
-	Product   Product
+	// Product   Product
 	Comment   string
 }

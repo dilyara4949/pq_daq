@@ -1,0 +1,26 @@
+version: "3.9"
+services:
+  postgres:
+    image: postgres:15.2-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=12345
+      - POSTGRES_DB=pqdaq
+    ports:
+      - 5433:5432
+  api:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5433
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: 12345
+      DATABASE_NAME: pqdaq
+    ports:
+      - "8080:8080"
+    depends_on: 
+      - postgres
+    command: ["/app/main"]
+

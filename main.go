@@ -37,15 +37,5 @@ func main() {
 	}
 	
 
-	// userRoutes := r.Group("api/user")
-	// {
-	// 	userRoutes.GET("/", getUsers)
-	// }
 
 }
-
-// func getUsers(c *gin.Context){
-// 	s := "lnrlbf"
-
-// 	c.IndentedJSON(http.StatusOK, &s)
-// }

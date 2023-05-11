@@ -11,5 +11,7 @@ func Inject(container *dig.Container) error {
 	_ = container.Provide(NewCategoryController)
 	_ = container.Provide(NewProductController)
 	_ = container.Provide(NewRatingController)
+	_ = container.Provide(NewCommentController)
+	_ = container.Provide(NewOrderController)
 	return nil
 }
